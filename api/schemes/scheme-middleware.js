@@ -13,7 +13,7 @@ const checkSchemeId = (req, res, next) => {
   Schemes.findById(id)
     .then(scheme =>{
       if(!scheme) {
-        res.status(404).json({message: "scheme with scheme_id <actual id> not found"})
+        res.status(404).json({message: `scheme with scheme_id ${id} not found`})
       } else {
         console.log(scheme)
         req.scheme = scheme

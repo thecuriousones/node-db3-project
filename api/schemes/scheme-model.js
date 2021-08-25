@@ -129,16 +129,7 @@ function find() { // EXERCISE A
       const finalResult = resultObject(initialArray)
 
       return finalResult;
-
-    
-
-    return returnedObject; 
-
-
-
-      
-
-    
+  
 }
 
 function findSteps(scheme_id) { // EXERCISE C
