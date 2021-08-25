@@ -1,3 +1,5 @@
+const db = require('../../data/db-config.js')
+
 function find() { // EXERCISE A
   /*
     1A- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`.
@@ -15,9 +17,16 @@ function find() { // EXERCISE A
     2A- When you have a grasp on the query go ahead and build it in Knex.
     Return from this function the resulting dataset.
   */
+
+    return db('schemes as sc')
+      .join('steps as st', 'st.scheme_id', 'sc.scheme_id')
+      .select('sc.*')
+      .count('st.step_id as number_of_steps')
+      .groupBy('sc.scheme_id')
+      .orderBy('sc.scheme_id')
 }
 
-function findById(scheme_id) { // EXERCISE B
+  async function findById(scheme_id) { // EXERCISE B
   /*
     1B- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`:
 
@@ -83,6 +92,53 @@ function findById(scheme_id) { // EXERCISE B
         "steps": []
       }
   */
+
+      const initialArray = await db("schemes as sc")
+        .join('steps as st', "sc.scheme_id", "st.scheme_id")
+        .select('sc.scheme_id','sc.scheme_name',"st.step_id", "st.step_number", "st.instructions")
+        .where('sc.scheme_id', `${scheme_id}`)
+        .orderBy('st.step_number');
+
+
+      // const resultObject = (array) =>
+      //   array.reduce((obj, item) => {
+      //     obj[item] = item;
+      //     console.log('this is item:', item)
+      //     return item;
+      //   }, {});
+
+        const resultObject = (array) => {
+          const result = {
+            scheme_id: array[0].scheme_id,
+            scheme_name: array[0].scheme_name,
+            steps: []
+          }
+          array.forEach(row => {
+            if (row.step_id) {
+              result.steps.push({
+                step_id: row.step_id,
+                step_number: row.step_number,
+                instructions: row.instructions,
+              })
+            }
+          })
+
+          return result
+        }
+
+      const finalResult = resultObject(initialArray)
+
+      return finalResult;
+
+    
+
+    return returnedObject; 
+
+
+
+      
+
+    
 }
 
 function findSteps(scheme_id) { // EXERCISE C
